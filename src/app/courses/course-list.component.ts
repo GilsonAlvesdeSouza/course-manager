@@ -14,10 +14,18 @@ export class CourseListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._courses = this.courseService.retrieveAll();
-    this.filteredCourses = this._courses;
+    this.retrieveAll();
   }
 
+  retrieveAll(): void {
+    this.courseService.retrieveAll().subscribe({
+      next: courses => {
+        this._courses = courses;
+        this.filteredCourses = this._courses;
+      },
+      error: error => console.log('erro ', error)
+    });
+  }
 
   get filterBy(): string {
     return this._filterBy;
@@ -25,8 +33,7 @@ export class CourseListComponent implements OnInit {
 
   set filterBy(value: string) {
     this._filterBy = value;
-    this.filteredCourses = this._courses.filter((course: Course) => course.name.
-    toLocaleLowerCase().indexOf(this._filterBy.toLocaleLowerCase()) > -1);
+    this.filteredCourses = this._courses.filter((course: Course) => course.name.toLocaleLowerCase().indexOf(this._filterBy.toLocaleLowerCase()) > -1);
   }
 
 }
